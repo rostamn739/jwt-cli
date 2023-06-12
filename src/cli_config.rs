@@ -62,6 +62,12 @@ pub struct EncodeArgs {
     #[clap(default_missing_value = "+30m")]
     pub expires: Option<String>,
 
+    /// the time the token should live for, in seconds or a systemd.time string
+    #[clap(long = "ttl")]
+    #[clap(value_parser = is_timestamp_or_duration)]
+    #[clap(default_value = None)]
+    pub ttl: Option<String>,
+
     /// the issuer of the token
     #[clap(long = "iss", short = 'i')]
     #[clap(value_parser)]

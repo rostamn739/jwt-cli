@@ -62,6 +62,17 @@ impl PayloadItem {
 
         PayloadItem::from_string_with_name(val, name)
     }
+
+    pub fn from_ttl_with_name(val: Option<&String>, now: i64) -> Option<PayloadItem> {
+        if let Some(val) = val {
+            if let Ok(parsed_duration) = val.parse::<i64>() {
+                let seconds = parsed_duration + now;
+                return PayloadItem::from_string_with_name(Some(&seconds.to_string()), "exp");
+            }
+        }
+
+        PayloadItem::from_string_with_name(None, "exp")
+    }
 }
 
 impl Payload {

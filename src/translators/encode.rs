@@ -118,7 +118,11 @@ pub fn encode_token(arguments: &EncodeArgs) -> JWTResult<String> {
             _ => panic!("Invalid JSON provided!"),
         });
     let now = Utc::now().timestamp();
-    let expires = PayloadItem::from_timestamp_with_name(arguments.expires.as_ref(), "exp", now);
+    let expires = if arguments.expires.is_none() {
+        PayloadItem::from_ttl_with_name(arguments.ttl.as_ref(), now)
+    } else {
+        PayloadItem::from_timestamp_with_name(arguments.expires.as_ref(), "exp", now)
+    };
     let not_before =
         PayloadItem::from_timestamp_with_name(arguments.not_before.as_ref(), "nbf", now);
     let issued_at = match arguments.no_iat {
